@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Workers List on MEAN</title>
+    <link href="app-content/app.css" rel="stylesheet" />
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="container">
+    <!-- header -->
+    <header>
+        <ul class="nav nav-tabs">
+            <!-- <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home">Home</a></li>-->
+            <!-- <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account">Account</a></li>-->
+            <li><a href="/login" target="_self">Logout</a></li>
+        </ul>
+        <div class="flash-message" ng-if="flash">
+            <div class="{{'alert alert-' + flash.type}}" ng-bind="flash.message"></div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <main ui-view></main>
+	<div ng-controller="AppCtrl">
+		<div class="mainContent">	
+			 <div class="container">
+			   <h1>Table of workers</h1>
+			   <input type="text" placeholder="Search by first name" ng-model="searchText.fname"/>
+			   <input type="text" placeholder="Search by last name" ng-model="searchText.lname"/>
+			   <input type="text" placeholder="Search by position" ng-model="searchText.position"/>
+			   	<!-- начало пагинации -->
+				<div class="pagination pagination-centered" ng-show="workers.length">
+					<ul class="pagination-controle pagination">
+					  <li>
+					   <button type="button" class="btn btn-primary" ng-disabled="currentPage == 1"
+						ng-click="currentPage=currentPage-1"> &lt; PREV</button>
+					  </li>
+					  <li>
+					   <span>Page {{currentPage}} of {{ page}}</span>
+					  </li>
+					  <li>
+					   <button type="button" class="btn btn-primary"
+						ng-disabled="currentPage >= len/numPerPage"
+						ng-click="currentPage = currentPage+1">NEXT &gt;</button>
+					  </li>
+					</ul>
+				</div>
+				<!-- конец пагинации --> 
+				<div class="table">
+					<div>
+						<div data-title="нажмите чтобы отфильтрировать данные з сервера по Имени(только латынь)">First Name</div>				  
+						<div data-title="нажмите чтобы отфильтрировать данные з сервера по Фамилии(только латынь)">Last Name</div>
+						<div data-title="нажмите чтобы отфильтрировать данные з сервера по позиции(только латынь)">Position</div>
+						<div>Действие</div>
+						<div>&nbsp;</div>
+					</div>
+					<div>
+						<div id="enterDate">
+							<div><input placeholder="First Name" class="form-control fname" ng-model="contact.fname"></div>
+							<div><input placeholder="Last Name" class="form-control lname" ng-model="contact.lname"></div>
+							<div><input placeholder="Position" class="form-control position"  ng-model="contact.position"></div>
+							<div><button class="btn btn-primary" ng-click="addContact()">Добавить</button></div>
+							<div><button class="btn btn-primary" ng-click="deleteSelected()">DELETE</button></div>
+							<div><button class="btn btn-primary" ng-click="getAll()">GET</button></div>
+							<div><button class="btn btn-info" ng-click="update()">Оновить</button></div>
+							<div><button class="btn btn-info" ng-click="deselect()">Очистить</button></div>
+						</div>
+						<div id="sortDate">
+							<div>№</div>
+							<div>
+								<a id="firstN" href="" ng-click="predicate = 'fname'; reverse=!reverse">First Name</a>
+							</div>
+							<div>
+								<a id="lastN" href="" ng-click="predicate = 'lname'; reverse=!reverse">Last Name</a>
+							</div>
+							<div>
+								<a id="positionN" href="" ng-click="predicate = 'position'; reverse=!reverse">Position</a>
+							</div>
+							<div></div>
+						</div>
+						<div id="repeatDate" ng-repeat="workers in filteredTodos | orderBy:predicate:reverse | filter:searchText">
+							<div><input type="checkbox" class="class1" checklist-model="list.workers" checklist-value="workers._id"></div>
+							<div>{{ $index + 1 }}</div>
+							<div>{{workers.fname}}</div>
+							<div>{{workers.lname}}</div>
+							<div>{{workers.position}}</div>
+							<div><button class="btn btn-danger" ng-click="remove(workers._id)">Удалить</button></div>
+							<div><button class="btn btn-warning" ng-click="edit(workers._id)">Редакт</button></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- footer -->
+    <footer></footer>
+
+    <!-- external scripts -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.min.js"></script>
+
+    <!-- application scripts -->
+    <script src="app.js"></script>
+    <script src="app-services/user.service.js"></script>
+    <script src="app-services/flash.service.js"></script>
+    <script src="home/index.controller.js"></script>
+    <script src="account/index.controller.js"></script>
+</body>
+</html>
